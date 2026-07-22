@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: pedido-service
+
+    kafka:
+      boostrap-servers: localhost:9092
+
+  server:
+    port: 8081
