@@ -2,8 +2,8 @@ spring:
   application:
     name: pedido-service
 
-    kafka:
-      boostrap-servers: localhost:9092
+  kafka:
+    bootstrap-servers: kafka:29092
 
-  server:
+server:
     port: 8081

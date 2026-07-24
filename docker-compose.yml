@@ -59,7 +59,7 @@ services:
 
   producer-service:
     build:
-      context: ./pedido.producer
+      context: ./pedido-service
 
     container_name: kafka-producer
 
@@ -70,11 +70,11 @@ services:
       - kafka
 
     ports:
-      - "8000:8000"
+      - "8081:8081"
 
   inventario-service:
     build:
-      context: ./str.consumer
+      context: ./inventario-service
 
     container_name: kafka-consumer
 
@@ -85,7 +85,7 @@ services:
       - kafka
 
     ports:
-      - "8001:8001"    
+      - "8080:8080"    
 
 
 networks:
