@@ -6,4 +6,4 @@ spring:
     bootstrap-servers: kafka:29092
 
 server:
-    port: 8080    
+    port: 8000    

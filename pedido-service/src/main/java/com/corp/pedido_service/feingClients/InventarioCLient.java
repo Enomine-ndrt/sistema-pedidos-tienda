@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(
         name = "inventario-service",
-        url = "http://localhost:8080",
+        url = "http://inventario-service:8000",
         path = "/inventario"
 )
 public interface InventarioCLient {

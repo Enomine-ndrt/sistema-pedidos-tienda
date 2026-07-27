@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      routes:
+
+        - id: pedido-services
+          uri: http://pedido-service:8001
+          predicates:
+            - Path=/pedido/**
+
+        - id: inventario-service
+          uri: http://inventario-service:8000
+          predicates:
+            - Path=/inventario/**
+
+server:
+  port: 8080

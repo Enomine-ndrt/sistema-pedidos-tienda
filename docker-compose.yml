@@ -57,11 +57,11 @@ services:
       KAFKA_BROKERCONNECT: kafka:29092
 
 
-  producer-service:
+  pedido-service:
     build:
       context: ./pedido-service
 
-    container_name: kafka-producer
+    container_name: pedido-service
 
     networks:
       - broker-kafka
@@ -70,13 +70,13 @@ services:
       - kafka
 
     ports:
-      - "8081:8081"
+      - "8001:8001"
 
   inventario-service:
     build:
       context: ./inventario-service
 
-    container_name: kafka-consumer
+    container_name: inventario-service
 
     networks:
       - broker-kafka
@@ -85,7 +85,20 @@ services:
       - kafka
 
     ports:
-      - "8080:8080"    
+      - "8000:8000"
+
+  gateway-service:
+    build:
+      context: ./gateway-service
+
+    container_name: gateway
+
+    networks:
+      - broker-kafka
+
+    ports:
+      - "8080:8080"  
+
 
 
 networks:
