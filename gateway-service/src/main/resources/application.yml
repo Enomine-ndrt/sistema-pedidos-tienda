@@ -9,15 +9,19 @@ spring:
           routes:
 
             - id: pedido-service
-              uri: http://pedido-service:8001
+              uri: lb://pedido-service
               predicates:
                 - Path=/pedido/**
 
             - id: inventario-service
-              uri: http://inventario-service:8000
+              uri: lb://inventario-service
               predicates:
                 - Path=/inventario/**
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
 
 management:
   endpoints:
@@ -28,7 +32,6 @@ management:
   endpoint:
     gateway:
       enabled: true
-
 
 server:
   port: 8080

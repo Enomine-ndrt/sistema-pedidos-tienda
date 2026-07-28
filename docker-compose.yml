@@ -99,7 +99,14 @@ services:
     ports:
       - "8080:8080"  
 
-
+  eureka-server:
+    build:
+      context: ./eureka-server
+    container_name: eureka-server  
+    ports:
+      - "8761:8761"
+    networks:
+      - broker-kafka
 
 networks:
   broker-kafka:
