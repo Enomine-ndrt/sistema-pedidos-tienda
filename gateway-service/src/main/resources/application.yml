@@ -16,5 +16,11 @@ spring:
           predicates:
             - Path=/inventario/**
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: gateway,health
+
 server:
   port: 8080
