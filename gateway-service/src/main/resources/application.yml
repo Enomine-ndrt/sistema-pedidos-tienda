@@ -4,23 +4,31 @@ spring:
 
   cloud:
     gateway:
-      routes:
+      server:
+        webflux:
+          routes:
 
-        - id: pedido-service
-          uri: http://pedido-service:8001
-          predicates:
-            - Path=/pedido/**
+            - id: pedido-service
+              uri: http://pedido-service:8001
+              predicates:
+                - Path=/pedido/**
 
-        - id: inventario-service
-          uri: http://inventario-service:8000
-          predicates:
-            - Path=/inventario/**
+            - id: inventario-service
+              uri: http://inventario-service:8000
+              predicates:
+                - Path=/inventario/**
+
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
+  endpoint:
+    gateway:
+      enabled: true
+
 
 server:
   port: 8080
