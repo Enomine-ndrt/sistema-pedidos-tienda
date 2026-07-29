@@ -3,7 +3,7 @@ spring:
     name: pedido-service
 
   datasource:
-    url: jdbc:postgresql://postgres-inventario:5432/inventario
+    url: jdbc:postgresql://postgres-pedido:5432/pedido
     username: postgres
     password: postgres
 

@@ -109,16 +109,28 @@ services:
     networks:
       - broker-kafka
 
-  postgres:
+  postgres-inventario:
     image: postgres:16
     environment:
       POSTGRES_DB: inventario
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5432:5432"  
     networks:
-      - broker-kafka      
+      - broker-kafka
+
+  postgres-pedido:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: pedidos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"  
+    networks:
+      - broker-kafka  
+
 
 networks:
   broker-kafka:
