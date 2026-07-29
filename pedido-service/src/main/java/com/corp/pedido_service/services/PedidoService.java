@@ -18,7 +18,7 @@ public class PedidoService {
 
     private final InventarioCLient inventarioCLient;
     private final PedidoRepository pedidoRepository;
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     public Boolean crearPedido(Long productoId, Integer cantidad){
         ProductoDTO productoDTO = inventarioCLient.obtener(productoId);
@@ -28,15 +28,8 @@ public class PedidoService {
             return false;
         }
 
-        String mensaje = "";
-
-        if(productoDTO.getStock() < cantidad){
-            mensaje = "Pedido no creado: stock no suficiente ";
-        }else{
-            mensaje = "Pedido creado";
-        }
-
-        kafkaTemplate.send("str-topic",partition,null, mensaje).whenComplete((result, ex) -> {
+        String mensaje = "Pedido creado";
+        kafkaTemplate.send("pedido-events",partition,null, mensaje).whenComplete((result, ex) -> {
 
             if(ex != null){
                 log.error("Error , al enviar el mensaje: {}", ex.getMessage());
