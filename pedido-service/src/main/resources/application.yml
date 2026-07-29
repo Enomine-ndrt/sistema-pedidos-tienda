@@ -2,6 +2,16 @@ spring:
   application:
     name: pedido-service
 
+  datasource:
+    url: jdbc:postgresql://postgres-inventario:5432/inventario
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
   kafka:
     bootstrap-servers: kafka:29092
 
