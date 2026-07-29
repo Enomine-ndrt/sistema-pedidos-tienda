@@ -61,8 +61,6 @@ services:
     build:
       context: ./pedido-service
 
-    container_name: pedido-service
-
     networks:
       - broker-kafka
 
@@ -70,15 +68,13 @@ services:
       - kafka
       - eureka-server
 
-    ports:
-      - "8001:8001"
+    expose:
+      - "8001"
 
   inventario-service:
     build:
       context: ./inventario-service
 
-    container_name: inventario-service
-
     networks:
       - broker-kafka
 
@@ -86,8 +82,8 @@ services:
       - kafka
       - eureka-server
 
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
 
   gateway-service:
     build:
@@ -97,6 +93,9 @@ services:
 
     networks:
       - broker-kafka
+
+    depends_on:
+      - eureka-server  
 
     ports:
       - "8080:8080"  
