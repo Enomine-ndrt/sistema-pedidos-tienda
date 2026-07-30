@@ -3,10 +3,12 @@ package com.corp.inventario_service.listeners;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
 
 
 @RequiredArgsConstructor
 @Log4j2
+@Component
 public class StrConsumerListener {
 
     @KafkaListener(groupId = "group-1",topics = "pedido-events",containerFactory = "validMessageContainerFactory")
