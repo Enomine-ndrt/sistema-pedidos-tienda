@@ -1,5 +1,6 @@
 package com.corp.inventario_service.listeners;
 
+import com.corp.inventario_service.events.PedidoCreadoEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -11,9 +12,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class StrConsumerListener {
 
-    @KafkaListener(groupId = "group-1",topics = "pedido-events",containerFactory = "validMessageContainerFactory")
-    public void listenerPedido(String message){
-        log.info("LISTENERPEDIDO ::: Recibiendo un pedido {} ", message);
+    @KafkaListener(groupId = "inventario-group",
+                    topics = "pedido-events",
+                    containerFactory = "kafkaListenerContainerFactory")
+    public void listenerPedido(PedidoCreadoEvent event){
+        log.info("Pedido recibido");
+        log.info("ID Pedido: {}", event.getPedidoId());
+        log.info("Producto: {}", event.getProductoId());
+        log.info("Cantidad: {}", event.getCantidad());
     }
 
 }
