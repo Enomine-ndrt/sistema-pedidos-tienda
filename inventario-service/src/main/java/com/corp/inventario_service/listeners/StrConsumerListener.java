@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class StrConsumerListener {
 
     @KafkaListener(groupId = "inventario-group",
-                    topics = "pedido-events",
+                    topics = "pedido-events-v2",
                     containerFactory = "kafkaListenerContainerFactory")
     public void listenerPedido(PedidoCreadoEvent event){
         log.info("Pedido recibido");

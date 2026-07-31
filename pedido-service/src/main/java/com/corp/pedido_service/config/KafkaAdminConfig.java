@@ -25,7 +25,7 @@ public class KafkaAdminConfig {
     @Bean
     public KafkaAdmin.NewTopics topics(){
         return new KafkaAdmin.NewTopics(
-                TopicBuilder.name("pedido-events").partitions(2).replicas(1).build()
+                TopicBuilder.name("pedido-events-v2").partitions(2).replicas(1).build()
         );
     }
 
