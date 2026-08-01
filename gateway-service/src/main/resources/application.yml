@@ -18,6 +18,11 @@ spring:
               predicates:
                 - Path=/inventario/**
 
+            - id: inventario-websocket
+              uri: lb:ws://inventario-service
+              predicates:
+                - Path=/ws-stock
+
 eureka:
   client:
     service-url:

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Component;
 
 
@@ -19,6 +20,7 @@ public class StrConsumerListener {
     private final ProductoRepository repository;
     private final SimpMessagingTemplate messagingTemplate;
 
+    @Transactional
     @KafkaListener(groupId = "inventario-group",
                     topics = "pedido-events",
                     containerFactory = "kafkaListenerContainerFactory")
