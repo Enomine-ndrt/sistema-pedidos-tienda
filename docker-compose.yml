@@ -30,6 +30,9 @@ services:
       - "--certificatesresolvers.le.acme.email=${LETSENCRYPT_EMAIL}"
       - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
 
+      - "--log.level=DEBUG"
+      - "--ping=true"
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./letsencrypt/acme.json:/letsencrypt/acme.json     
