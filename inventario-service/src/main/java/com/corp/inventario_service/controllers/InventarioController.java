@@ -5,9 +5,11 @@ import com.corp.inventario_service.entities.Producto;
 import com.corp.inventario_service.events.StockActualizadoEvent;
 import com.corp.inventario_service.repository.ProductoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class InventarioController {
     @PostMapping
     public ResponseEntity<Producto> save(@RequestBody Producto producto){
         Producto nuevoProducto =  repository.save(producto);
+        notificarStock(nuevoProducto);
         return ResponseEntity.ok(nuevoProducto);
     }
 
@@ -47,18 +50,14 @@ public class InventarioController {
         }
 
         Producto producto = repository.findById(id).orElseThrow(() ->
-                        new RuntimeException("Producto no encontrado")
-        );
+                new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Producto no encontrado"
+                        ));
 
         producto.setStock(producto.getStock() + request.getCantidad());
         Producto productoActualizado =  repository.save(producto);
-        messagingTemplate.convertAndSend(
-                "/topic/stock",
-                new StockActualizadoEvent(
-                        productoActualizado.getId(),
-                        productoActualizado.getStock()
-                )
-        );
+        notificarStock(productoActualizado);
 
         return ResponseEntity.ok(productoActualizado);
     }
@@ -74,6 +73,16 @@ public class InventarioController {
                 producto.getId()
         );
         return ResponseEntity.noContent().build();
+    }
+
+    private void notificarStock(Producto producto) {
+        messagingTemplate.convertAndSend(
+                "/topic/stock",
+                new StockActualizadoEvent(
+                        producto.getId(),
+                        producto.getStock()
+                )
+        );
     }
 
 }
