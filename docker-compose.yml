@@ -1,7 +1,7 @@
 services:
 
   traefik:
-    image: traefik:v3.0
+    image: traefik:v3.5
     container_name: traefik
     restart: always
 
@@ -27,6 +27,7 @@ services:
       # Let's Encrypt
       - "--certificatesresolvers.le.acme.httpchallenge=true"
       - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.le.acme.email=${LETSENCRYPT_EMAIL}"
       - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
 
     volumes:
