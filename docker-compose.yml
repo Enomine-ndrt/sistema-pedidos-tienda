@@ -1,5 +1,39 @@
 services:
 
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    restart: always
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    networks:
+      - broker-kafka
+
+    command:
+
+      # Docker provider
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+
+      # HTTP
+      - "--entrypoints.web.address=:80"
+
+      # HTTPS
+      - "--entrypoints.websecure.address=:443" 
+
+      # Let's Encrypt
+      - "--certificatesresolvers.le.acme.httpchallenge=true"
+      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./letsencrypt/acme.json:/letsencrypt/acme.json     
+
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
     networks:
@@ -97,8 +131,15 @@ services:
     depends_on:
       - eureka-server  
 
-    ports:
-      - "8080:8080"  
+    expose:
+      - "8080"
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gateway.rule=Host(`api.limfusa.com`)"  
+      - "traefik.http.routers.gateway.entrypoints=websecure"
+      - "traefik.http.routers.gateway.tls.certresolver=le"
+      - "traefik.http.services.gateway.loadbalancer.server.port=8080"  
 
   eureka-server:
     build:
