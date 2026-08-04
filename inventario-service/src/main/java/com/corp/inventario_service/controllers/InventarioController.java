@@ -2,6 +2,8 @@ package com.corp.inventario_service.controllers;
 
 import com.corp.inventario_service.dto.AgregarStockRequest;
 import com.corp.inventario_service.entities.Producto;
+import com.corp.inventario_service.events.ProductoCreadoEvent;
+import com.corp.inventario_service.events.ProductoEliminadoEvent;
 import com.corp.inventario_service.events.StockActualizadoEvent;
 import com.corp.inventario_service.repository.ProductoRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +40,14 @@ public class InventarioController {
     @PostMapping
     public ResponseEntity<Producto> save(@RequestBody Producto producto){
         Producto nuevoProducto =  repository.save(producto);
-        notificarStock(nuevoProducto);
+        messagingTemplate.convertAndSend(
+                "/topic/producto-creado",
+                new ProductoCreadoEvent(
+                        nuevoProducto.getId(),
+                        nuevoProducto.getNombre(),
+                        nuevoProducto.getStock()
+                )
+        );
         return ResponseEntity.ok(nuevoProducto);
     }
 
@@ -57,32 +66,33 @@ public class InventarioController {
 
         producto.setStock(producto.getStock() + request.getCantidad());
         Producto productoActualizado =  repository.save(producto);
-        notificarStock(productoActualizado);
+        messagingTemplate.convertAndSend(
+                "/topic/stock",
+                new StockActualizadoEvent(
+                        productoActualizado.getId(),
+                        productoActualizado.getStock()
+                )
+        );
 
         return ResponseEntity.ok(productoActualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id){
-        Producto producto = repository.findById(id).orElseThrow(() ->
-                        new RuntimeException("Producto no encontrado")
-        );
+        Producto producto = repository.findById(id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND,
+                "Producto no encontrado"
+        ));
         repository.delete(producto);
+
         messagingTemplate.convertAndSend(
                 "/topic/producto-eliminado",
-                producto.getId()
+                new ProductoEliminadoEvent(
+                        producto.getId()
+                )
         );
         return ResponseEntity.noContent().build();
     }
 
-    private void notificarStock(Producto producto) {
-        messagingTemplate.convertAndSend(
-                "/topic/stock",
-                new StockActualizadoEvent(
-                        producto.getId(),
-                        producto.getStock()
-                )
-        );
-    }
 
 }
